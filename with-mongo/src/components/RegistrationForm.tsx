@@ -1,11 +1,13 @@
 "use client";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 export default function RegistrationForm() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const router = useRouter();
   async function handleSubmit(e) {
     e.preventDefault();
     if (!name || !password || !email) {
@@ -20,15 +22,22 @@ export default function RegistrationForm() {
         },
         body: JSON.stringify({ name, password, email }),
       });
+      const response = await res.json();
+      const { error: err } = response;
+      if (err) {
+        setError(err);
+        return;
+      }
       if (res.ok) {
         setEmail("");
         setName("");
         setPassword("");
+        router.push("/");
       } else {
         console.log("User Registration failed");
       }
     } catch (error) {
-      console.log("Error Occured : ", error);
+      console.error("Error Occured : ", error);
     }
   }
   return (
