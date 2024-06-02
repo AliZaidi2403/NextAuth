@@ -12,7 +12,11 @@ export default function ClientPage() {
       redirect("/api/auth/signin?callbackUrl=/client");
     },
   });
-  console.log(session);
+  /* if (session?.user.role !== "admin" && session?.user.role !== "manager") {
+    return <h1 className="text-3xl">Access Denied!!</h1>;
+  }*/
+  //we can handle like this or we can simply handle these protection in middleware
+  if (!session?.user) return;
   return (
     <section className="flex flex-col gap-6">
       <UserCard user={session?.user} pagetype={"Client"} />
